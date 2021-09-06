@@ -1,0 +1,46 @@
+{
+	"users": [
+{
+    "id":1,
+    "name":"Gerson",
+    "dateJoined":1630513979582,
+    "email":"gersondiketama@yahoo.com"
+},
+
+{
+    "id":1,
+    "name":"jefferson",
+    "dateJoined":1630513979582,
+    "email":"gersondiketama@yahoo.com"
+},
+
+
+{
+    "id":1,
+    "name":"Christopher",
+    "dateJoined":1630513979582,
+    "email":"gersondiketama@yahoo.com"
+},
+
+
+{
+    "id":1,
+    "name":"Leon",
+    "dateJoined":1630513979582,
+    "email":"gersondiketama@yahoo.com"
+}
+
+    ],
+	"posts": [
+
+        {
+            "id":1,
+            "userid":1,
+            "title":"Giffy",
+            "imageURL":"https://media.giphy.com/media/26xBI73gWquCBBCDe/giphy.gif"
+        }
+
+
+    ],
+	"messages":[]
+}
