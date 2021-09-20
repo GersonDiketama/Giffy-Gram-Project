@@ -1,4 +1,15 @@
 
+  // export const Post = (postObject) => {
+  //   return `
+  //     <section class="post">
+  //       <header>
+  //           <h2 class="post__title">${postObject.title}</h2>
+  //       </header>
+  //       <img class="post__image" src="${postObject.imageURL}" />
+  //     </section>
+  //   `
+  // }
+
   export const Post = (postObject) => {
     return `
       <section class="post">
@@ -6,6 +17,12 @@
             <h2 class="post__title">${postObject.title}</h2>
         </header>
         <img class="post__image" src="${postObject.imageURL}" />
+        <h4>${postObject.description}</h4>
+        <div><button id="edit--${postObject.id}">Edit</button></div>
       </section>
+      <button id="delete__${postObject.id}">Delete</button>
+
+
     `
-  }
+}
+
