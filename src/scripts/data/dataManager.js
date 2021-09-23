@@ -1,8 +1,9 @@
 
 export const getUsers = () =>
 {
-    return fetch ("https://localhost:8088/users")
-    .then(response => response.json)
+    return fetch ("http://localhost:8088/users")
+    .then(response => response.json())
+    
 
 }
 
@@ -26,14 +27,27 @@ export const usePostCollection = () => {
   //The spread operator makes this quick work
   return [...postCollection];
 }
+// export const getPosts = () => {
+//   return fetch("http://localhost:8088/posts")
+//     .then(response => response.json())
+//     .then(parsedResponse => {
+//       postCollection = parsedResponse
+//       return parsedResponse;
+//     })
+// }
+
+
 export const getPosts = () => {
-  return fetch("http://localhost:8088/posts")
+  const userId = getLoggedInUser().id
+  return fetch(`http://localhost:8088/posts?_expand=user`)
     .then(response => response.json())
     .then(parsedResponse => {
+      console.log("data with user", parsedResponse)
       postCollection = parsedResponse
       return parsedResponse;
     })
 }
+
 
 
 export const getSinglePost = (postId) => {
@@ -86,16 +100,96 @@ export const createPost = postObj => {
 
 
 
-export const getLoggedInUser = () => 
+export let getLoggedInUser = () => 
 {
     return loggedInUser
 }
 
-const loggedInUser = 
+
+//change declaration to let
+let loggedInUser = {}
+
+export const logoutUser = () => {
+  loggedInUser = {}
+}
+
+
+export const setLoggedInUser = (userObj) => {
+  loggedInUser = userObj;
+}
+
+
+
+
+export const loginUser = (userObj) => {
+  return fetch(`http://localhost:8088/users?name=${userObj.name}&email=${userObj.email}`)
+  .then(response => response.json())
+  .then(parsedUser => {
+    //is there a user?
+    console.log("parsedUser", parsedUser) //data is returned as an array
+    if (parsedUser.length > 0){
+      setLoggedInUser(parsedUser[0]);
+      return getLoggedInUser();
+    }else {
+      //no user
+      return false;
+    }
+  })
+}
+
+
+
+
+//new user 
+export const registerUser = (userObj) => {
+  return fetch(`http://localhost:8088/users`, {
+    method: "POST",
+      headers: {
+          "Content-Type": "application/json"
+      },
+      body: JSON.stringify(userObj)
+  })
+  .then(response => response.json())
+  .then(parsedUser => {
+    setLoggedInUser(parsedUser);
+    return getLoggedInUser();
+  })
+}
+
+//get like
+
+
+
+export const getLikes = (postId) => {
+  return fetch(`http://localhost:8088/userLikes?postId=${postId}`)
+    .then(response => response.json())
+}
+
+
+export const deleteLikes = (postId) =>
 {
-      id: 1,
-      name: "Gerson",
-      email: "gersondiketama@yahoo.com"
+  return fetch(`http://localhost:8088/userLikes?postId=${postId}`,
+  {
+    method:"DELETE",
+    headers:{ "Content-type":"application/json"}
+  })
+  .then(response => response.json())
+}
+//post like
+
+
+
+
+export const postLike = likeObject => {
+	return fetch(`http://localhost:8088/userLikes/`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json"
+		},
+		body: JSON.stringify(likeObject)
+	})
+		.then(response => response.json())
+
 }
 
 

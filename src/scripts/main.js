@@ -1,5 +1,5 @@
 // Can you explain what is being imported here?
-import { getPosts, getUsers } from "./data/DataManager.js"
+import { getLoggedInUser, getPosts, getUsers } from "./data/DataManager.js"
 import { usePostCollection } from "./data/DataManager.js";
 import { PostList } from "./feed/PostList.js"
 import { createPost } from "./data/DataManager.js";
@@ -7,28 +7,22 @@ import { NavBar } from "./nav/navBar.js";
 import { Footer } from "./nav/footer.js";
 import { PostEntry } from "./data/PostEntry.js";
 import { deletePost } from "./data/DataManager.js";
-import { getSinglePost, updatePost, getLoggedInUser} from "./data/DataManager.js";
+import { getSinglePost, updatePost, logoutUser, setLoggedInUser, loginUser, registerUser, postLike, getLikes} from "./data/DataManager.js";
 import { PostEdit } from "./feed/postEdit.js";
+import { LoginForm } from "./auth/loginForm.js";
+import { RegisterForm } from "./auth/registerForm.js";
+import { deleteLikes } from "./data/DataManager.js";
 
 
 
-// const showUsers = (ee) =>
+// function shownameList()
 // {
-//        ee = getLoggedInUser()
-
-//        let jj = ""
-
-//        for(const gg of ee)
-//        {
-//            const showme = (tt) =>
-//            {
-//                return `<li>${tt.name}</li>`
-//            }
-
-//            jj += showme(gg)
-//        }
-// document.querySelector('.postList').innerHTML = jj
+//   getPosts()
+//   .then(data =>
+//     {
+//     })
 // }
+
 
 
 
@@ -37,6 +31,12 @@ const showPostList = () => {
 	const postElement = document.querySelector(".postList");
 	getPosts().then((allPosts) => {
 		postElement.innerHTML = PostList(allPosts);
+
+    // postElement.innerHTML= allPosts.user.name;
+    // allPosts.forEach(element => {
+    //   console.log("this is the one name",element.user.name)
+     
+    // });
 	})
 }
 
@@ -113,10 +113,11 @@ const shoowFooter = (yearSelected) =>
       //we have not created a user yet - for now, we will hard code `1`.
       //we can add the current time as well
       const postObject = {
+          // name:getUsers().then(names => names.users[0].name),
           title: title,
           imageURL: url,
           description: description,
-          userId: 1,
+          userId:getLoggedInUser().id,
           timestamp: Date.now()
       }
   
@@ -189,7 +190,7 @@ const shoowFooter = (yearSelected) =>
         title: title,
         imageURL: url,
         description: description,
-        userId: getLoggedInUser().id,
+        // userId: getLoggedInUser().id,
         timestamp: parseInt(timestamp),
         id: parseInt(postId)
       }
@@ -209,7 +210,118 @@ const shoowFooter = (yearSelected) =>
     const entryElement = document.querySelector(".entryForm");
     entryElement.innerHTML = PostEntry();
   }
+  //user log
+  applicationElement.addEventListener("click", event => {
+    if (event.target.id === "logout") {
+      logoutUser;
+      sessionStorage.clear();
+      checkForUser();
+    
+      // console.log(getLoggedInUser());
+    }
+  })
   
+  
+
+  const checkForUser = () => {
+    if (sessionStorage.getItem("user")){
+      //this is expecting an object. Need to fix
+      setLoggedInUser(JSON.parse(sessionStorage.getItem("user")));
+      startGiffyGram();
+    }else {
+      //show login/register
+      showLoginRegister()
+    }
+  }
+  
+  
+
+  const showLoginRegister = () => {
+  	showNavBar();
+  	const entryElement = document.querySelector(".entryForm");
+  	//template strings can be used here too
+  	entryElement.innerHTML = `${LoginForm()} <hr/> <hr/> ${RegisterForm()}`;
+  	//make sure the post list is cleared out too
+	const postElement = document.querySelector(".postList");
+	postElement.innerHTML = "";
+}
+
+
+
+
+applicationElement.addEventListener("click", event => {
+  event.preventDefault();
+  if (event.target.id === "login__submit") {
+    //collect all the details into an object
+    const userObject = {
+      name: document.querySelector("input[name='name']").value,
+      email: document.querySelector("input[name='email']").value
+    }
+    loginUser(userObject)
+    .then(dbUserObj => {
+      if(dbUserObj){
+        sessionStorage.setItem("user", JSON.stringify(dbUserObj));
+        startGiffyGram();
+      }else {
+        //got a false value - no user
+        const entryElement = document.querySelector(".entryForm");
+        entryElement.innerHTML = `<p class="center">That user does not exist. Please try again or register for your free account.</p> ${LoginForm()} <hr/> <hr/> ${RegisterForm()}`;
+      }
+    })
+  }
+})
+
+
+
+
+
+// new user
+
+
+applicationElement.addEventListener("click", event => {
+  event.preventDefault();
+  if (event.target.id === "register__submit") {
+    //collect all the details into an object
+    const userObject = {
+      name: document.querySelector("input[name='registerName']").value,
+      email: document.querySelector("input[name='registerEmail']").value
+    }
+    registerUser(userObject)
+    .then(dbUserObj => {
+      sessionStorage.setItem("user", JSON.stringify(dbUserObj));
+      startGiffyGram();
+    })
+  }
+})
+
+
+
+
+applicationElement.addEventListener("click", event => {
+	event.preventDefault();
+	if (event.target.id.startsWith("like").clicked == true && event.target.id.startsWith("like")) {
+    console.log("this is actually running?")
+	  const likeObject = {
+		 postId: parseInt(event.target.id.split("__")[1]),
+		 userId: getLoggedInUser().id
+	  }
+    
+	  postLike(likeObject)
+		.then(response => {
+		  showPostList();
+		})
+	}
+
+  if(event.target.id.startsWith("unlike").clicked == true)
+
+  { console.log("it is running?")
+    const postId = parseInt(event.target.id.split("__")[1])
+    deleteLikes(postId)
+    .then(response =>{showPostList()})
+  }
+  })
+
+
 
 
   const startGiffyGram = () => {
@@ -220,4 +332,4 @@ const shoowFooter = (yearSelected) =>
     shoowFooter()
 }
 
-startGiffyGram();
+checkForUser()

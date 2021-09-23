@@ -1,4 +1,5 @@
 .miniMode {
+   
     padding: 1rem;
     margin: 0 25%;
     border: 1px dashed slategrey;
@@ -50,6 +51,8 @@
 
 .post {
     margin: 0 25%;
+    margin-bottom: 100px;
+    margin-top: 200px;
     flex-basis: 50%;
 }
 
