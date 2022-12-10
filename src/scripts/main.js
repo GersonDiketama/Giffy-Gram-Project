@@ -13,8 +13,6 @@ import { LoginForm } from "./auth/loginForm.js";
 import { RegisterForm } from "./auth/registerForm.js";
 import { deleteLikes } from "./data/DataManager.js";
 
-
-
 // function shownameList()
 // {
 //   getPosts()
@@ -22,9 +20,6 @@ import { deleteLikes } from "./data/DataManager.js";
 //     {
 //     })
 // }
-
-
-
 
 const showPostList = () => {
 	//Get a reference to the location on the DOM where the list will display
@@ -72,8 +67,6 @@ applicationElement.addEventListener("change", event => {
     
   }
 })
-
-
 
 const showFilteredPosts = (year) => {
   //get a copy of the post collection
@@ -127,11 +120,6 @@ const shoowFooter = (yearSelected) =>
     }
   })
   
-
-  
-
-
-
   applicationElement.addEventListener("click", event => {
     event.preventDefault();
     if (event.target.id.startsWith("delete")) {
@@ -221,8 +209,6 @@ const shoowFooter = (yearSelected) =>
     }
   })
   
-  
-
   const checkForUser = () => {
     if (sessionStorage.getItem("user")){
       //this is expecting an object. Need to fix
@@ -246,9 +232,6 @@ const shoowFooter = (yearSelected) =>
 	postElement.innerHTML = "";
 }
 
-
-
-
 applicationElement.addEventListener("click", event => {
   event.preventDefault();
   if (event.target.id === "login__submit") {
@@ -271,12 +254,7 @@ applicationElement.addEventListener("click", event => {
   }
 })
 
-
-
-
-
 // new user
-
 
 applicationElement.addEventListener("click", event => {
   event.preventDefault();
@@ -293,9 +271,6 @@ applicationElement.addEventListener("click", event => {
     })
   }
 })
-
-
-
 
 applicationElement.addEventListener("click", event => {
 	event.preventDefault();
@@ -320,9 +295,6 @@ applicationElement.addEventListener("click", event => {
     .then(response =>{showPostList()})
   }
   })
-
-
-
 
   const startGiffyGram = () => {
  
